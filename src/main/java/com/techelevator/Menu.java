@@ -39,7 +39,6 @@ public class Menu {
     }
 
 
-
     double money = 0.00;
 
     public void purchaseMenu() {

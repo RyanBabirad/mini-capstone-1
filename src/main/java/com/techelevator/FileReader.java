@@ -17,14 +17,12 @@ public class FileReader {
 
     public void readTheFile() {
 
-        try (Scanner scanner = new Scanner(filePath)) {
-
-            while (scanner.hasNextLine()) {
+        try (Scanner scanner = new Scanner(filePath)) {while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] splitsky = line.split("\\|");
                 allItems.add(splitsky);
 
-                System.out.println(line + "| " + );// Stock(From map?)
+                System.out.println(line + "| " );// Stock(From map?)
             }
             System.out.println("\n");
 
@@ -40,6 +38,7 @@ public class FileReader {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] splitsky = line.split("\\|");
+
 
             }
 
