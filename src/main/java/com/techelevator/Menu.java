@@ -1,14 +1,18 @@
 package com.techelevator;
 
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Menu {
     private final Scanner keyboard = new Scanner(System.in);
+    String userInput;
+    FileReader fileReader = new FileReader();
+
 
     public void mainMenu() {
-
-        String userInput;
         Integer parsedInput = 0;
+        fileReader.buildInventory();
 
         do {
             System.out.println("(1) Display Vending Machine Items");
@@ -19,8 +23,12 @@ public class Menu {
                 parsedInput = Integer.parseInt(userInput);
 
                 if (parsedInput == 1) {
-                    FileReader fileReader = new FileReader();
-                    fileReader.readTheFile();
+                    for (String key : fileReader.getInventoryMap().keySet()) {
+                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
+                        + fileReader.getInventoryMap().get(key).getProductName() + " | "
+                        + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
+                        + fileReader.getInventoryMap().get(key).getStock() + "\n");
+                    }
                 }
                 if (parsedInput == 2) {
                     purchaseMenu();
@@ -29,21 +37,22 @@ public class Menu {
                     System.exit(0);
                 }
                 if (parsedInput > 3 || parsedInput < 1) {
-                    System.out.println("Sorry, not an option...");
+                    System.out.println("Sorry, not an option...loser");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Sorry, not an option...");
-                }
+                System.out.println("Sorry, not an option...loser");
+            }
         }
         while (parsedInput != 3);
     }
 
-
     double money = 0.00;
+    int quarters = 0;
+    int dimes = 0;
+    int nickels = 0;
 
     public void purchaseMenu() {
         int parsedInput = 0;
-        String userInput;
 
         do {
             System.out.print("Current Money Provided: ");
@@ -61,9 +70,24 @@ public class Menu {
                     addMoney();
                 }
                 if (parsedInput == 2) {
-                    purchaseMenu();
+                    for (String key : fileReader.getInventoryMap().keySet()) {
+                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
+                                + fileReader.getInventoryMap().get(key).getProductName() + " | "
+                                + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
+                                + fileReader.getInventoryMap().get(key).getStock() + "\n");
+                    }
+                    System.out.println("Please select item code: ");
+                    userInput = keyboard.nextLine();
+                    attemptToPurchase(fileReader.getInventoryMap());
                 }
                 if (parsedInput == 3) {
+                    getChange();
+                    System.out.println("Your change is: \n" + quarters +
+                            " quarters \n" + dimes + " dimes \n" + nickels + " nickels");
+                    money = 0;
+                    quarters = 0;
+                    dimes = 0;
+                    nickels = 0;
                     mainMenu();
                 }
                 if (parsedInput > 3 || parsedInput < 1) {
@@ -75,13 +99,13 @@ public class Menu {
         } while (parsedInput != 3);
     }
 
-    public void addMoney(){
+    public void addMoney() {
         String userInput = keyboard.nextLine();
         int parsedInteger = 0;
 
         try {
             parsedInteger = Integer.parseInt(userInput);
-            if (parsedInteger < 0){
+            if (parsedInteger < 0) {
                 System.out.println("This is not an ATM!!!");
                 purchaseMenu();
             }
@@ -90,5 +114,35 @@ public class Menu {
         }
         money += parsedInteger;
     }
+
+    public void getChange() {
+        money = money * 100;
+        quarters = (int) money / 25;
+        dimes = (int) (money % 25) / 10;
+        nickels = (int) ((money % 25) % 10) / 5;
+    }
+
+    public void attemptToPurchase(Map<String, Product> map) {
+        for (String key : map.keySet()) {
+            if (!map.containsKey(userInput)) {
+                System.out.println("Nice try idiot, try again...");
+                purchaseMenu();
+            }
+        }
+            if (map.get(userInput).getStock() < 1){
+                System.out.println("Sorry, someone else ate them all...");
+                purchaseMenu();
+            } else if (map.get(userInput).getPrice() > money) {
+                System.out.println("Not enough money. Shouldn't have went to Vegas. Tsk Tsk...");
+            } else {
+                money -= map.get(userInput).getPrice();
+                System.out.println(map.get(userInput).getProductName());
+                System.out.println(map.get(userInput).getPrice());
+                System.out.println(map.get(userInput).getSound());
+                System.out.println("Money left: " + money);
+                map.get(userInput).setStock(map.get(userInput).getStock());
+                purchaseMenu();
+            }
+        }
 }
 

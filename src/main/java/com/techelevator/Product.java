@@ -1,29 +1,43 @@
 package com.techelevator;
 
-import java.util.Stack;
+public abstract class Product {
 
-public class Product {
-
-
+    private String slot;
     private String productName;
     private double price;
     private int stock = 5;
-    private Stack<String> productStack = new Stack<>();
 
-    public Product () {}
 
-    public Product(String productName, double price, int stock) {
+    public Product(String productName, double price, String slot) {
         this.productName = productName;
         this.price = price;
-        this.stock = stock;
+        this.slot = slot;
     }
 
+    public String getSlot() {
+        return slot;
+    }
+
+    public void setStock(int stock) {
+        this.stock -= 1;
+    }
 
     public int getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
+    public String getProductName() {
+        return productName;
     }
+
+    public double getPrice() {
+        return price;
+    }
+
+
+
+    public abstract String getSound();
+
+
 }
+

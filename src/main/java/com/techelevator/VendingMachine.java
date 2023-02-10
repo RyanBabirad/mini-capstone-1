@@ -1,14 +1,11 @@
 package com.techelevator;
 
 public class VendingMachine {
-
-    Menu newMenu = new Menu(); //Display
-    //FileReader
-    //Inventory
-
+    FileReader fileReader = new FileReader();
+    Menu newMenu = new Menu();
 
     public void StartUp() {
-        ///Populate Inventory
+
         //Start log file
         newMenu.mainMenu();
     }
