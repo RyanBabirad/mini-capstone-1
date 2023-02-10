@@ -5,8 +5,8 @@ public class VendingMachine {
     Menu newMenu = new Menu();
 
     public void StartUp() {
-
+        fileReader.buildInventory();
         //Start log file
-        newMenu.mainMenu();
+        newMenu.mainMenu(fileReader);
     }
 }

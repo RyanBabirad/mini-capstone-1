@@ -7,43 +7,58 @@ import java.util.Scanner;
 public class Menu {
     private final Scanner keyboard = new Scanner(System.in);
     String userInput;
-    FileReader fileReader = new FileReader();
+    FileReader fileReader;
 
 
-    public void mainMenu() {
-        Integer parsedInput = 0;
-        fileReader.buildInventory();
+    public void mainMenu(FileReader fileReader) {
+            Integer parsedInput = 0;
+            this.fileReader = fileReader;
+            do {
+                System.out.println("(1) Display Vending Machine Items");
+                System.out.println("(2) Purchase");
+                System.out.println("(3) Exit");
+                userInput = keyboard.nextLine();
+                try {
+                    parsedInput = Integer.parseInt(userInput);
 
-        do {
-            System.out.println("(1) Display Vending Machine Items");
-            System.out.println("(2) Purchase");
-            System.out.println("(3) Exit");
-            userInput = keyboard.nextLine();
-            try {
-                parsedInput = Integer.parseInt(userInput);
-
-                if (parsedInput == 1) {
-                    for (String key : fileReader.getInventoryMap().keySet()) {
-                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
-                        + fileReader.getInventoryMap().get(key).getProductName() + " | "
-                        + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
-                        + fileReader.getInventoryMap().get(key).getStock() + "\n");
+                    if (parsedInput == 1) {
+                        for (int i = 0; i < fileReader.getProducts().size(); i++) {
+                            String currentSlot = fileReader.getProducts().get(i).getSlot();
+                            System.out.println(fileReader.getProducts().get(i).getSlot() + " | "
+                                    + fileReader.getProducts().get(i).getProductName() + " | "
+                                    +String.format("%.2f", fileReader.getProducts().get(i).getPrice()) + " | QTY:"
+                                    + fileReader.getInventoryMap().get(currentSlot).getStock());
+                        }
+                        System.out.println("\n");
+//                    for (Product p : fileReader.getProducts()) {
+//                        int count = 0;
+//                        System.out.println(fileReader.getProducts().get(count).getSlot() + " | "
+//                                + fileReader.getProducts().get(count) + " | "
+//                                + fileReader.getProducts().get(count) + " | QTY:"
+//                        );
+//                        count ++;
+//                    }
+//                    for (String key : fileReader.getInventoryMap().keySet()) {
+//                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
+//                        + fileReader.getInventoryMap().get(key).getProductName() + " | "
+//                        + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
+//                        + fileReader.getInventoryMap().get(key).getStock());
+//                    }
                     }
-                }
-                if (parsedInput == 2) {
-                    purchaseMenu();
-                }
-                if (parsedInput == 3) {
-                    System.exit(0);
-                }
-                if (parsedInput > 3 || parsedInput < 1) {
+                    if (parsedInput == 2) {
+                        purchaseMenu();
+                    }
+                    if (parsedInput == 3) {
+                        System.exit(0);
+                    }
+                    if (parsedInput > 3 || parsedInput < 1) {
+                        System.out.println("Sorry, not an option...loser");
+                    }
+                } catch (NumberFormatException e) {
                     System.out.println("Sorry, not an option...loser");
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Sorry, not an option...loser");
             }
-        }
-        while (parsedInput != 3);
+            while (parsedInput != 3);
     }
 
     double money = 0.00;
@@ -70,12 +85,19 @@ public class Menu {
                     addMoney();
                 }
                 if (parsedInput == 2) {
-                    for (String key : fileReader.getInventoryMap().keySet()) {
-                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
-                                + fileReader.getInventoryMap().get(key).getProductName() + " | "
-                                + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
-                                + fileReader.getInventoryMap().get(key).getStock() + "\n");
+                    for (int i = 0; i < fileReader.getProducts().size(); i++) {
+                        String currentSlot = fileReader.getProducts().get(i).getSlot();
+                        System.out.println(fileReader.getProducts().get(i).getSlot() + " | "
+                                + fileReader.getProducts().get(i).getProductName() + " | "
+                                + String.format("%.2f", fileReader.getProducts().get(i).getPrice()) + " | QTY:"
+                                + fileReader.getInventoryMap().get(currentSlot).getStock());
                     }
+//                    for (String key : fileReader.getInventoryMap().keySet()) {
+//                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
+//                                + fileReader.getInventoryMap().get(key).getProductName() + " | "
+//                                + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
+//                                + fileReader.getInventoryMap().get(key).getStock());
+//                    }
                     System.out.println("Please select item code: ");
                     userInput = keyboard.nextLine();
                     attemptToPurchase(fileReader.getInventoryMap());
@@ -84,11 +106,12 @@ public class Menu {
                     getChange();
                     System.out.println("Your change is: \n" + quarters +
                             " quarters \n" + dimes + " dimes \n" + nickels + " nickels");
+                    System.out.println("\n");
                     money = 0;
                     quarters = 0;
                     dimes = 0;
                     nickels = 0;
-                    mainMenu();
+                    mainMenu(fileReader);
                 }
                 if (parsedInput > 3 || parsedInput < 1) {
                     System.out.println("Sorry, not an option...");
@@ -129,20 +152,21 @@ public class Menu {
                 purchaseMenu();
             }
         }
-            if (map.get(userInput).getStock() < 1){
-                System.out.println("Sorry, someone else ate them all...");
-                purchaseMenu();
-            } else if (map.get(userInput).getPrice() > money) {
-                System.out.println("Not enough money. Shouldn't have went to Vegas. Tsk Tsk...");
-            } else {
-                money -= map.get(userInput).getPrice();
-                System.out.println(map.get(userInput).getProductName());
-                System.out.println(map.get(userInput).getPrice());
-                System.out.println(map.get(userInput).getSound());
-                System.out.println("Money left: " + money);
-                map.get(userInput).setStock(map.get(userInput).getStock());
-                purchaseMenu();
-            }
+        if (map.get(userInput).getStock() < 1) {
+            System.out.println("Sorry, someone else ate them all...");
+            purchaseMenu();
+        } else if (map.get(userInput).getPrice() > money) {
+            System.out.println("Not enough money. Shouldn't have went to Vegas. Tsk Tsk...");
+        } else {
+            money -= map.get(userInput).getPrice();
+            System.out.println(map.get(userInput).getProductName());
+            System.out.println(String.format("%.2f",map.get(userInput).getPrice()));
+            System.out.println(map.get(userInput).getSound());
+            System.out.println("Money left: " + String.format("%.2f", money));
+            map.get(userInput).setStock(map.get(userInput).getStock());
+            System.out.println("\n");
+            purchaseMenu();
         }
+    }
 }
 
