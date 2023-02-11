@@ -24,7 +24,7 @@ public class FileReader {
                 String[] splitsky = line.split("\\|");
                 allItems.add(splitsky);
 
-                System.out.println(line + "| " + );// Stock(From map?)
+                System.out.println(line + "| " + 5);// Stock(From map?)
             }
             System.out.println("\n");
 
