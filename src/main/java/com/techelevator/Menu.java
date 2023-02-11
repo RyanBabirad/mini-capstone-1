@@ -1,6 +1,8 @@
 package com.techelevator;
 
+import java.io.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -8,43 +10,46 @@ public class Menu {
     private final Scanner keyboard = new Scanner(System.in);
     String userInput;
     FileReader fileReader;
+    String path = "log.txt";
+    File file = new File(path);
+    String dateTimeForOutput = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm:ss a"));
 
 
     public void mainMenu(FileReader fileReader) {
-            Integer parsedInput = 0;
-            this.fileReader = fileReader;
-            do {
-                System.out.println("(1) Display Vending Machine Items");
-                System.out.println("(2) Purchase");
-                System.out.println("(3) Exit");
-                userInput = keyboard.nextLine();
-                try {
-                    parsedInput = Integer.parseInt(userInput);
+        Integer parsedInput = 0;
+        this.fileReader = fileReader;
+        do {
+            System.out.println("(1) Display Vending Machine Items");
+            System.out.println("(2) Purchase");
+            System.out.println("(3) Exit");
+            userInput = keyboard.nextLine();
+            try {
+                parsedInput = Integer.parseInt(userInput);
 
-                    if (parsedInput == 1) {
-                        for (int i = 0; i < fileReader.getProducts().size(); i++) {
-                            String currentSlot = fileReader.getProducts().get(i).getSlot();
-                            System.out.println(fileReader.getProducts().get(i).getSlot() + " | "
-                                    + fileReader.getProducts().get(i).getProductName() + " | "
-                                    +String.format("%.2f", fileReader.getProducts().get(i).getPrice()) + " | QTY:"
-                                    + fileReader.getInventoryMap().get(currentSlot).getStock());
-                        }
-                        System.out.println("\n");
+                if (parsedInput == 1) {
+                    for (int i = 0; i < fileReader.getProducts().size(); i++) {
+                        String currentSlot = fileReader.getProducts().get(i).getSlot();
+                        System.out.println(fileReader.getProducts().get(i).getSlot() + " | "
+                                + fileReader.getProducts().get(i).getProductName() + " | "
+                                + String.format("%.2f", fileReader.getProducts().get(i).getPrice()) + " | QTY:"
+                                + fileReader.getInventoryMap().get(currentSlot).getStock());
                     }
-                    if (parsedInput == 2) {
-                        purchaseMenu();
-                    }
-                    if (parsedInput == 3) {
-                        System.exit(0);
-                    }
-                    if (parsedInput > 3 || parsedInput < 1) {
-                        System.out.println("Sorry, not an option...loser");
-                    }
-                } catch (NumberFormatException e) {
+                    System.out.println("\n");
+                }
+                if (parsedInput == 2) {
+                    purchaseMenu();
+                }
+                if (parsedInput == 3) {
+                    System.exit(0);
+                }
+                if (parsedInput > 3 || parsedInput < 1) {
                     System.out.println("Sorry, not an option...loser");
                 }
+            } catch (NumberFormatException e) {
+                System.out.println("Sorry, not an option...loser");
             }
-            while (parsedInput != 3);
+        }
+        while (parsedInput != 3);
     }
 
     double money = 0.00;
@@ -68,7 +73,9 @@ public class Menu {
 
                 if (parsedInput == 1) {
                     System.out.println("How much money are you adding?");
+
                     addMoney();
+
                 }
                 if (parsedInput == 2) {
                     for (int i = 0; i < fileReader.getProducts().size(); i++) {
@@ -104,7 +111,7 @@ public class Menu {
 
     public void addMoney() {
         String userInput = keyboard.nextLine();
-        int parsedInteger = 0;
+        double parsedInteger = 0;
 
         try {
             parsedInteger = Integer.parseInt(userInput);
@@ -116,6 +123,13 @@ public class Menu {
             System.out.println("Sorry, try again...");
         }
         money += parsedInteger;
+        try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
+            pw.println(dateTimeForOutput + " FEED MONEY: $" + String.format("%.2f", parsedInteger)
+                    + " $" + String.format("%.2f", money));
+
+        } catch (IOException e) {
+            System.out.println("File does not exist.");
+        }
     }
 
     public void getChange() {
@@ -123,6 +137,12 @@ public class Menu {
         quarters = (int) money / 25;
         dimes = (int) (money % 25) / 10;
         nickels = (int) ((money % 25) % 10) / 5;
+        try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
+            pw.println(dateTimeForOutput + " GIVE CHANGE: $"
+                    + String.format("%.2f", money/100.00) + " $" + String.format("%.2f", 0.00));
+        } catch (IOException e) {
+            System.out.println("File does not exist.");
+        }
     }
 
     public void attemptToPurchase(Map<String, Product> map) {
@@ -140,11 +160,19 @@ public class Menu {
         } else {
             money -= map.get(userInput).getPrice();
             System.out.println(map.get(userInput).getProductName());
-            System.out.println(String.format("%.2f",map.get(userInput).getPrice()));
+            System.out.println(String.format("%.2f", map.get(userInput).getPrice()));
             System.out.println(map.get(userInput).getSound());
             System.out.println("Money left: " + String.format("%.2f", money));
             map.get(userInput).setStock(map.get(userInput).getStock());
             System.out.println("\n");
+            try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
+                pw.println(dateTimeForOutput + " " + map.get(userInput).getProductName()
+                        +" $" + String.format("%.2f", map.get(userInput).getPrice())
+                        + " $" + String.format("%.2f", money));
+
+            } catch (IOException e) {
+                System.out.println("File does not exist.");
+            }
             purchaseMenu();
         }
     }
