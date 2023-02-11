@@ -1,8 +1,7 @@
 package com.techelevator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.NumberFormat;
+import java.io.FileNotFoundException;;
 import java.util.*;
 
 public class FileReader {
@@ -41,10 +40,7 @@ public class FileReader {
                     products.add(newProduct);
                     inventoryMap.put(slotValue, newProduct);
                 }
-                //System.out.println(slotValue + " | " + productName + " | "
-                       // + String.format("%.2f", productPrice) + " | QTY:" + newProduct.getStock()) ;
             }
-            //System.out.println("\n");
 
         } catch (FileNotFoundException e) {
             System.out.println("Sorry buddy, no-go on the file!");

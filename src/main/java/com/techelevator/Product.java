@@ -34,8 +34,6 @@ public abstract class Product {
         return price;
     }
 
-
-
     public abstract String getSound();
 
 

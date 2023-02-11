@@ -30,20 +30,6 @@ public class Menu {
                                     + fileReader.getInventoryMap().get(currentSlot).getStock());
                         }
                         System.out.println("\n");
-//                    for (Product p : fileReader.getProducts()) {
-//                        int count = 0;
-//                        System.out.println(fileReader.getProducts().get(count).getSlot() + " | "
-//                                + fileReader.getProducts().get(count) + " | "
-//                                + fileReader.getProducts().get(count) + " | QTY:"
-//                        );
-//                        count ++;
-//                    }
-//                    for (String key : fileReader.getInventoryMap().keySet()) {
-//                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
-//                        + fileReader.getInventoryMap().get(key).getProductName() + " | "
-//                        + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
-//                        + fileReader.getInventoryMap().get(key).getStock());
-//                    }
                     }
                     if (parsedInput == 2) {
                         purchaseMenu();
@@ -92,12 +78,6 @@ public class Menu {
                                 + String.format("%.2f", fileReader.getProducts().get(i).getPrice()) + " | QTY:"
                                 + fileReader.getInventoryMap().get(currentSlot).getStock());
                     }
-//                    for (String key : fileReader.getInventoryMap().keySet()) {
-//                        System.out.println(fileReader.getInventoryMap().get(key).getSlot() + " | "
-//                                + fileReader.getInventoryMap().get(key).getProductName() + " | "
-//                                + fileReader.getInventoryMap().get(key).getPrice() + " | QTY:"
-//                                + fileReader.getInventoryMap().get(key).getStock());
-//                    }
                     System.out.println("Please select item code: ");
                     userInput = keyboard.nextLine();
                     attemptToPurchase(fileReader.getInventoryMap());
