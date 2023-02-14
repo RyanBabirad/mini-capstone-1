@@ -47,17 +47,17 @@ public class FileReader {
         }
     }
 
-        public String getSound() {
-            return null;
-        }
+//        public String getSound() {
+//            return null;
+//        }
 
     public Map<String, Product> getInventoryMap() {
         return inventoryMap;
     }
 
-    public void setInventoryMap(Map<String, Product> inventoryMap) {
-        this.inventoryMap = inventoryMap;
-    }
+//    public void setInventoryMap(Map<String, Product> inventoryMap) {
+//        this.inventoryMap = inventoryMap;
+//    }
 
     public List<Product> getProducts() {
         return products;

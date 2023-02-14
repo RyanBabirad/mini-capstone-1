@@ -29,7 +29,7 @@ public class Menu {
                 if (parsedInput == 1) {
                     for (int i = 0; i < fileReader.getProducts().size(); i++) {
                         String currentSlot = fileReader.getProducts().get(i).getSlot();
-                        System.out.println(fileReader.getProducts().get(i).getSlot() + " | "
+                        System.out.println(currentSlot + " | "
                                 + fileReader.getProducts().get(i).getProductName() + " | "
                                 + String.format("%.2f", fileReader.getProducts().get(i).getPrice()) + " | QTY:"
                                 + fileReader.getInventoryMap().get(currentSlot).getStock());
@@ -80,7 +80,7 @@ public class Menu {
                 if (parsedInput == 2) {
                     for (int i = 0; i < fileReader.getProducts().size(); i++) {
                         String currentSlot = fileReader.getProducts().get(i).getSlot();
-                        System.out.println(fileReader.getProducts().get(i).getSlot() + " | "
+                        System.out.println(currentSlot + " | "
                                 + fileReader.getProducts().get(i).getProductName() + " | "
                                 + String.format("%.2f", fileReader.getProducts().get(i).getPrice()) + " | QTY:"
                                 + fileReader.getInventoryMap().get(currentSlot).getStock());
